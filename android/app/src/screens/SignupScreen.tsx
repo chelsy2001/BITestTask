@@ -6,6 +6,9 @@ import {
   TextInput,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -48,97 +51,135 @@ const SignupScreen: React.FC<Props> = ({ navigation }) => {
     if (!validate()) return;
 
     const user = { name, email, password };
-
     await AsyncStorage.setItem('user', JSON.stringify(user));
 
-    Alert.alert('Success', 'Account created successfully', [
+    Alert.alert('Success 🎉', 'Account created successfully', [
       { text: 'OK', onPress: () => navigation.replace('Login') },
     ]);
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Create Account</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.card}>
+          <Text style={styles.title}>Create Account ✨</Text>
+          <Text style={styles.subtitle}>
+            Sign up to start shopping with us
+          </Text>
 
-      <TextInput
-        placeholder="Full Name"
-        style={styles.input}
-        value={name}
-        onChangeText={setName}
-      />
+          <TextInput
+            placeholder="Full Name"
+            placeholderTextColor="#999"
+            style={styles.input}
+            value={name}
+            onChangeText={setName}
+          />
 
-      <TextInput
-        placeholder="Email"
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        autoCapitalize="none"
-        keyboardType="email-address"
-      />
+          <TextInput
+            placeholder="Email Address"
+            placeholderTextColor="#999"
+            style={styles.input}
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
 
-      <TextInput
-        placeholder="Password"
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#999"
+            style={styles.input}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
 
-      <TextInput
-        placeholder="Confirm Password"
-        style={styles.input}
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-      />
+          <TextInput
+            placeholder="Confirm Password"
+            placeholderTextColor="#999"
+            style={styles.input}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+          />
 
-      <TouchableOpacity style={styles.button} onPress={handleSignup}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleSignup}>
+            <Text style={styles.buttonText}>Sign Up</Text>
+          </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-        <Text style={styles.link}>Already have an account? Login</Text>
-      </TouchableOpacity>
-    </View>
+          <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+            <Text style={styles.link}>
+              Already have an account?{' '}
+              <Text style={styles.linkBold}>Login</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
 export default SignupScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f4f6f8',
+    paddingHorizontal: 20,
     justifyContent: 'center',
-    padding: 24,
+  },
+  card: {
     backgroundColor: '#fff',
+    padding: 24,
+    borderRadius: 16,
+    elevation: 6,
   },
   title: {
     fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 24,
     textAlign: 'center',
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#777',
+    textAlign: 'center',
+    marginBottom: 28,
+    marginTop: 6,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 14,
+    borderColor: '#ddd',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+    fontSize: 15,
+    backgroundColor: '#fafafa',
   },
   button: {
-    backgroundColor: '#2196F3',
-    padding: 14,
-    borderRadius: 8,
+    backgroundColor: '#ff6f00',
+    paddingVertical: 14,
+    borderRadius: 12,
     alignItems: 'center',
-    marginVertical: 12,
+    marginTop: 6,
+    marginBottom: 18,
   },
   buttonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: '600',
   },
   link: {
     textAlign: 'center',
-    color: '#007BFF',
+    color: '#555',
+    fontSize: 14,
+  },
+  linkBold: {
+    color: '#ff6f00',
+    fontWeight: '600',
   },
 });

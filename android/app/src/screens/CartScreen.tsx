@@ -1,4 +1,11 @@
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import React from 'react';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   increaseQty,
@@ -16,65 +23,161 @@ export default function CartScreen({ navigation }: any) {
     0
   );
 
+  if (cart.length === 0) {
+    return (
+      <View style={styles.empty}>
+        <Text style={styles.emptyText}>Your cart is empty 🛒</Text>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {cart.map(item => (
-        <View key={item.id} style={styles.item}>
-          <Text style={styles.title}>{item.title}</Text>
-          <Text>₹ {item.price}</Text>
+      <ScrollView showsVerticalScrollIndicator={false}>
+        {cart.map(item => (
+          <View key={item.id} style={styles.card}>
+            <View style={styles.row}>
+              <Text numberOfLines={2} style={styles.title}>
+                {item.title}
+              </Text>
 
-          <View style={styles.qtyRow}>
-            <TouchableOpacity onPress={() => dispatch(decreaseQty(item.id))}>
-              <Text style={styles.qtyBtn}>-</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => dispatch(removeFromCart(item.id))}
+              >
+                <Text style={styles.remove}>✕</Text>
+              </TouchableOpacity>
+            </View>
 
-            <Text>{item.qty}</Text>
+            <Text style={styles.price}>₹ {item.price}</Text>
 
-            <TouchableOpacity onPress={() => dispatch(increaseQty(item.id))}>
-              <Text style={styles.qtyBtn}>+</Text>
-            </TouchableOpacity>
+            <View style={styles.qtyRow}>
+              <TouchableOpacity
+                style={styles.qtyBtn}
+                onPress={() => dispatch(decreaseQty(item.id))}
+              >
+                <Text style={styles.qtyText}>−</Text>
+              </TouchableOpacity>
+
+              <Text style={styles.qty}>{item.qty}</Text>
+
+              <TouchableOpacity
+                style={styles.qtyBtn}
+                onPress={() => dispatch(increaseQty(item.id))}
+              >
+                <Text style={styles.qtyText}>+</Text>
+              </TouchableOpacity>
+            </View>
           </View>
+        ))}
+      </ScrollView>
 
-          <Button
-            title="Remove"
-            onPress={() => dispatch(removeFromCart(item.id))}
-          />
+      {/* Checkout Footer */}
+      <View style={styles.footer}>
+        <View>
+          <Text style={styles.totalLabel}>Total Amount</Text>
+          <Text style={styles.total}>₹ {total}</Text>
         </View>
-      ))}
 
-      <Text style={styles.total}>Total: ₹ {total}</Text>
-
-      <Button
-        title="Proceed to Checkout (COD)"
-        onPress={() => navigation.navigate('Checkout')}
-      />
+        <TouchableOpacity
+          style={styles.checkoutBtn}
+          onPress={() => navigation.navigate('Checkout')}
+        >
+          <Text style={styles.checkoutText}>Checkout (COD)</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
-
 const styles = StyleSheet.create({
-  container: { padding: 16 },
-  item: {
-    padding: 12,
-    marginBottom: 12,
-    backgroundColor: '#fff',
-    borderRadius: 8,
-    elevation: 2,
+  container: {
+    flex: 1,
+    backgroundColor: '#f4f6f8',
   },
-  title: { fontWeight: 'bold' },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#777',
+  },
+  card: {
+    backgroundColor: '#fff',
+    marginHorizontal: 16,
+    marginVertical: 8,
+    padding: 14,
+    borderRadius: 12,
+    elevation: 3,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 15,
+    fontWeight: '600',
+    flex: 1,
+    marginRight: 8,
+  },
+  price: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+    marginVertical: 8,
+  },
+  remove: {
+    fontSize: 18,
+    color: '#e53935',
+  },
   qtyRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
-    marginVertical: 8,
+    marginTop: 6,
   },
   qtyBtn: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    height: 36,
+    width: 36,
+    borderRadius: 8,
+    backgroundColor: '#eeeeee',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  total: {
+  qtyText: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginVertical: 16,
+  },
+  qty: {
+    marginHorizontal: 16,
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 16,
+    backgroundColor: '#fff',
+    elevation: 10,
+  },
+  totalLabel: {
+    fontSize: 14,
+    color: '#777',
+  },
+  total: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  checkoutBtn: {
+    backgroundColor: '#ff6f00',
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+  },
+  checkoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

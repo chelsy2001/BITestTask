@@ -20,15 +20,26 @@ const ProductCard: React.FC<Props> = ({ product, onAddToCart }) => {
 
   const handleAdd = () => {
     dispatch(addToCart(product));
-    onAddToCart(); // navigate to cart
+    onAddToCart();
   };
 
   return (
-    <View style={styles.container}>
-      <Image source={{ uri: product.thumbnail }} style={styles.image} />
-      <Text style={styles.title}>{product.title}</Text>
+    <View style={styles.card}>
+      {/* IMAGE */}
+      <Image
+        source={{ uri: product.thumbnail }}
+        style={styles.image}
+        resizeMode="contain"
+      />
+
+      {/* DETAILS */}
+      <Text numberOfLines={1} style={styles.title}>
+        {product.title}
+      </Text>
+
       <Text style={styles.price}>₹ {product.price}</Text>
 
+      {/* BUTTON */}
       <TouchableOpacity style={styles.button} onPress={handleAdd}>
         <Text style={styles.buttonText}>Add to Cart</Text>
       </TouchableOpacity>
@@ -39,33 +50,48 @@ const ProductCard: React.FC<Props> = ({ product, onAddToCart }) => {
 export default ProductCard;
 
 const styles = StyleSheet.create({
-  container: {
+  card: {
     backgroundColor: '#fff',
+    marginHorizontal: 12,
+    marginVertical: 8,
+    borderRadius: 12,
+    overflow: 'hidden',
+    elevation: 4, // Android shadow
+  },
+  imageWrapper: {
+    backgroundColor: '#f5f5f5',
     padding: 12,
-    margin: 8,
-    borderRadius: 8,
-    elevation: 2,
+    alignItems: 'center',
   },
   image: {
-    height: 120,
-    resizeMode: 'contain',
+    height: 140,
+    width: '100%',
+    marginBottom: 10,
+  },
+  details: {
+    padding: 12,
   },
   title: {
-    fontWeight: 'bold',
-    marginTop: 8,
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 6,
   },
   price: {
-    marginVertical: 6,
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#2e7d32',
+    marginBottom: 10,
   },
   button: {
-    backgroundColor: '#4CAF50',
-    padding: 10,
-    borderRadius: 6,
-    marginTop: 8,
+    backgroundColor: '#ff6f00',
+    paddingVertical: 10,
+    borderRadius: 8,
   },
   buttonText: {
     color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
     textAlign: 'center',
-    fontWeight: 'bold',
   },
 });
