@@ -1,19 +1,21 @@
+import LottieView from 'lottie-react-native';
+import { View, Text, Button } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { clearCart } from '../redux/cartSlice';
 
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-const CheckoutScreen = () => {
-  return (
-    <View style={styles.container}>
-      <Text>Checkout Screen</Text> 
-    </View> 
-  );
+
+export default function CheckoutScreen() {
+const dispatch = useDispatch();
+
+
+return (
+<View>
+<Text>Cash on Delivery</Text>
+<LottieView
+source={require('../assets/success.json')}
+autoPlay loop={false}
+/>
+<Button title="Confirm Order" onPress={() => dispatch(clearCart())} />
+</View>
+);
 }
-export default CheckoutScreen;
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
